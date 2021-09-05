@@ -29,6 +29,16 @@ const StyledField = styled(Field)`
   }
 `;
 
+const Error = styled.p`
+  height: 0.9rem;
+  margin: 5px 0 0 0;
+  color: rgb(204, 0, 0);
+  font-size: 0.9rem;
+  text-shadow: 0px 1px 2px rgba(0, 0, 0, 1);
+  font-weight: 600;
+  text-align: right;
+`;
+
 const Label = styled.label`
   margin: 10px 0;
 `;
@@ -65,15 +75,6 @@ const Span = styled.span`
   font-weight: 600;
 `;
 
-const Error = styled.p`
-  height: 0.9rem;
-  margin: 5px 0 0 0;
-  color: rgb(204, 0, 0);
-  font-size: 0.9rem;
-  text-shadow: 0px 1px 2px rgba(0, 0, 0, 1);
-  font-weight: 600;
-`;
-
 const SignInForm = () => {
   return (
     <Formik
@@ -97,14 +98,10 @@ const SignInForm = () => {
       <StyledForm autoComplete="off" noValidate>
         <Label htmlFor="email">Email</Label>
         <StyledField name="email" type="email" />
-        <Error>
-          <ErrorMessage name="email" />
-        </Error>
+        <ErrorMessage component={Error} name="email" />
         <Label htmlFor="password">Password</Label>
         <StyledField name="password" type="password" />
-        <Error>
-          <ErrorMessage name="password" />
-        </Error>
+        <ErrorMessage component={Error} name="password" />
         <Button type="submit">Log In</Button>
         <SignUp>Don't have an account yet?</SignUp>
         <SignUp>
