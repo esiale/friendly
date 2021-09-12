@@ -1,4 +1,4 @@
-import { createGlobalStyle } from 'styled-components/macro';
+import { createGlobalStyle } from "styled-components/macro";
 
 const GlobalStyle = createGlobalStyle`
   :root {
@@ -7,12 +7,12 @@ const GlobalStyle = createGlobalStyle`
 
   * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
   }
 
   body {
     height: 100vh;
-    margin: 0;
-    padding: 0;
     font-family: 'Inter', sans-serif;
   }
 

@@ -2,12 +2,12 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyBoSjySSXd7YswXCqv_IATrWRHZaFwRJ_k',
-  authDomain: 'friendly-d825e.firebaseapp.com',
-  projectId: 'friendly-d825e',
-  storageBucket: 'friendly-d825e.appspot.com',
-  messagingSenderId: '686891483119',
-  appId: '1:686891483119:web:bcb6e32842b7a05aa7001a',
+  apiKey: 'AIzaSyDiuDnXs479rsygkEbkjNB8tTM-QG7zuxw',
+  authDomain: 'friendly-56b13.firebaseapp.com',
+  projectId: 'friendly-56b13',
+  storageBucket: 'friendly-56b13.appspot.com',
+  messagingSenderId: '645722080622',
+  appId: '1:645722080622:web:3bdcc776f44856bea9ad7f',
 };
 
 const app = initializeApp(firebaseConfig);
