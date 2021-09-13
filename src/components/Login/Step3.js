@@ -6,7 +6,7 @@ import {
   Error,
   Label,
   Paragraph,
-} from './SignInForm';
+} from './ui';
 import { Formik, ErrorMessage } from 'formik';
 import { useEffect } from 'react';
 import styled from 'styled-components/macro';
@@ -50,7 +50,6 @@ const Step3 = (props) => {
           newUserData.about = values.about;
           setSubmitting(false);
           registerNewUser();
-          setStep('step4');
         }}
       >
         <StyledStepForm autoComplete="off" noValidate>

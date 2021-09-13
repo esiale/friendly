@@ -1,7 +1,16 @@
-import { Formik, Field, Form, ErrorMessage } from 'formik';
+import { Formik, ErrorMessage } from 'formik';
 import { Link } from 'react-router-dom';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
+import {
+  StyledForm,
+  StyledField,
+  ErrorBox,
+  Error,
+  Label,
+  Button,
+  Paragraph,
+} from './ui';
 import * as Yup from 'yup';
 import styled from 'styled-components/macro';
 
@@ -12,77 +21,9 @@ const Wrapper = styled.div`
   padding: 0px 0px 20px 0px;
 `;
 
-const StyledForm = styled(Form)`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  padding: 0 10px;
-  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.9);
-`;
-
-const StyledField = styled(Field)`
-  border: 0;
-  border-bottom: 2px rgba(var(--accent), 0.8) solid;
-  background-color: rgba(255, 255, 255, 0.2);
-  padding: 7px;
-  color: #fff;
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 1rem;
-  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.9);
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-  transition: transform 300ms;
-  &:focus {
-    outline: none;
-    transform: scale(1.05);
-  }
-  &:-webkit-autofill {
-    transition: background-color 600000s 0s, color 600000s 0s, transform 300ms !important;
-  }
-`;
-
-const ErrorBox = styled.div`
-  height: 0.9rem;
-  margin: 5px 0 0 0;
-`;
-
-const Error = styled.p`
-  margin: 0;
-  color: rgb(204, 0, 0);
-  font-size: 0.9rem;
-  text-shadow: 0px 1px 2px rgba(0, 0, 0, 1);
-  text-align: right;
-`;
-
 const AuthenticationError = styled(Error)`
   text-align: center;
   font-size: 1rem;
-`;
-
-const Label = styled.label`
-  margin: 10px 0;
-`;
-
-const Button = styled.button`
-  border: 0;
-  border-radius: 20px;
-  background-color: rgba(var(--accent), 1);
-  margin: 15px 0 10px 0;
-  padding: 10px;
-  color: #fff;
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 1rem;
-  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.9);
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-  transition: all 300ms;
-
-  &:hover,
-  &:focus {
-    background-color: rgb(245, 174, 61);
-    transform: scale(1.05);
-    outline: 0;
-  }
 `;
 
 const Header = styled.header`
@@ -100,18 +41,10 @@ const Header = styled.header`
   padding-left: 15px;
 `;
 
-const H1 = styled.h1`
-  font-size: 3rem;
-  margin: 10px 0px; ;
-`;
-
-const H1span = styled.span`
-  color: rgba(243, 156, 18, 1);
-`;
-
-const H2 = styled.h2`
+const Para = styled.p`
   font-size: 1.3rem;
   margin: 0;
+  font-weight: 600;
 `;
 
 const SignUpPara = styled.p`
@@ -131,10 +64,15 @@ const StyledLink = styled(Link)`
   text-decoration: none;
 `;
 
-const Paragraph = styled.p`
-  font-size: 0.8rem;
-  margin-top: 10px;
-  text-align: center;
+const Logo = styled.p`
+  font-weight: 600;
+  font-size: 3rem;
+  margin: 10px 0px;
+  color: #fff;
+`;
+
+const LogoSpan = styled.span`
+  color: rgba(243, 156, 18, 1);
 `;
 
 const SignInForm = (props) => {
@@ -151,10 +89,10 @@ const SignInForm = (props) => {
   return (
     <Wrapper>
       <Header>
-        <H1>
-          Friend<H1span>ly</H1span>
-        </H1>
-        <H2>Your journey starts now</H2>
+        <Logo>
+          Friend<LogoSpan>ly</LogoSpan>
+        </Logo>
+        <Para>Your journey starts now</Para>
       </Header>
       <Formik
         initialValues={{

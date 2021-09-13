@@ -10,7 +10,11 @@ const Home = () => {
       console.log(err);
     }
   };
-  return <button onClick={() => signOutUser()}>Sign OUT</button>;
+  return (
+    <div>
+      <button onClick={() => signOutUser()}>Sign OUT</button>
+    </div>
+  );
 };
 
 export default Home;

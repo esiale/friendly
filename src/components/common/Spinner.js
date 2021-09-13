@@ -17,7 +17,7 @@ const SpinnerWrapper = styled.div`
 const SpinnerDiv = styled.div`
   width: 18px;
   height: 18px;
-  background-color: rgba(253, 99, 3, 1);
+  background-color: rgba(var(--secondary), 1);
   border-radius: 100%;
   display: inline-block;
   animation: ${animate} 1.4s infinite ease-in-out both;

@@ -8,7 +8,6 @@ import database from '../../config/firebase.config';
 import Step1 from './Step1';
 import Step2 from './Step2';
 import Step3 from './Step3';
-import Step4 from './Step4';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -34,7 +33,8 @@ const Header = styled.header`
   );
 `;
 
-const StyledH1 = styled.h1`
+const StyledPara = styled.p`
+  font-weight: 600;
   margin-top: 15px;
   font-size: 1.4rem;
 `;
@@ -106,7 +106,6 @@ const SignUpForm = () => {
         registerNewUser={registerNewUser}
       />
     ),
-    step4: <Step4 setTitle={setTitle} />,
   };
 
   const EnumState = ({ state }) => {
@@ -116,7 +115,7 @@ const SignUpForm = () => {
   return (
     <Wrapper>
       <Header>
-        <StyledH1>{title}</StyledH1>
+        <StyledPara>{title}</StyledPara>
       </Header>
       <EnumState state={step}></EnumState>
     </Wrapper>

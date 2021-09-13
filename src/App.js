@@ -2,13 +2,14 @@ import { lazy, Suspense, useState, useEffect } from 'react';
 import { BrowserRouter as Router, Switch } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import GlobalStyle from './theme/globalStyles';
-import Loader from './components/common/Loader';
+import LoginLoader from './components/common/LoginLoader';
 import ProtectedRoutes from './routes/ProtectedRoutes';
 import PublicRoute from './routes/PublicRoute';
 import PrivateRoute from './routes/PrivateRoute';
 import database from './config/firebase.config';
 
 const Login = lazy(() => import('./components/Login'));
+const Main = lazy(() => import('./components/Main/'));
 const SignInForm = lazy(() => import('./components/Login/SignInForm'));
 const SignUpForm = lazy(() => import('./components/Login/SignUpForm'));
 
@@ -33,7 +34,7 @@ const App = () => {
     <>
       <GlobalStyle />
       <Router>
-        <Suspense fallback={<Loader />}>
+        <Suspense fallback={<LoginLoader />}>
           <Switch>
             <PublicRoute path="/login" isLoggedIn={isLoggedIn}>
               <Login>
@@ -46,7 +47,9 @@ const App = () => {
               </Login>
             </PublicRoute>
             <PrivateRoute path="/" isLoggedIn={isLoggedIn}>
-              <ProtectedRoutes />
+              <Main>
+                <ProtectedRoutes />
+              </Main>
             </PrivateRoute>
           </Switch>
         </Suspense>

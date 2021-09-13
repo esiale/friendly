@@ -1,9 +1,15 @@
-import { lazy } from 'react';
+import Home from '../components/Main/Home';
+import Messages from '../components/Main/Messages';
 
 const routes = [
   {
     path: 'home',
-    component: lazy(() => import('../components/Home')),
+    component: Home,
+    exact: true,
+  },
+  {
+    path: 'messages',
+    component: Messages,
     exact: true,
   },
 ];

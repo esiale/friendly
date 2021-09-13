@@ -1,8 +1,10 @@
-import { createGlobalStyle } from "styled-components/macro";
+import { createGlobalStyle } from 'styled-components/macro';
 
 const GlobalStyle = createGlobalStyle`
   :root {
-    --accent: 243, 156, 18;
+    --primary: 243, 156, 18;
+    --secondary: 253, 99, 3;
+    --tertiary: 246, 184, 85;
   }
 
   * {

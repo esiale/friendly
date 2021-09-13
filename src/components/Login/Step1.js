@@ -6,7 +6,7 @@ import {
   Error,
   Label,
   Paragraph,
-} from './SignInForm';
+} from './ui';
 import { Formik, ErrorMessage } from 'formik';
 import { getAuth, fetchSignInMethodsForEmail } from 'firebase/auth';
 import styled from 'styled-components/macro';
