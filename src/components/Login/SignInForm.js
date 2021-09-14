@@ -80,7 +80,7 @@ const SignInForm = (props) => {
 
   const signIn = async (email, password) => {
     const auth = getAuth();
-    signInWithEmailAndPassword(auth, email, password).catch((error) => {
+    await signInWithEmailAndPassword(auth, email, password).catch((error) => {
       setError('Wrong email and/or password');
       console.error(error);
     });

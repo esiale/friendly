@@ -30,7 +30,7 @@ const StyledTextArea = styled(StyledField)`
 `;
 
 const Step3 = (props) => {
-  const { newUserData, setTitle, setStep, registerNewUser } = props;
+  const { newUserData, setTitle, registerNewUser } = props;
 
   useEffect(() => setTitle('Almost finished...'));
 
@@ -38,25 +38,25 @@ const Step3 = (props) => {
     <Wrapper>
       <Formik
         initialValues={{
-          motto: '',
+          location: '',
           about: '',
         }}
         validationSchema={Yup.object({
-          motto: Yup.string().max(60, 'Must be less than 60 characters'),
-          about: Yup.string().max(300, 'Must be less than 300 characters'),
+          location: Yup.string().max(20, 'Must be less than 20 characters'),
+          about: Yup.string().max(600, 'Must be less than 600 characters'),
         })}
         onSubmit={(values, { setSubmitting }) => {
-          newUserData.motto = values.motto;
+          newUserData.location = values.location;
           newUserData.about = values.about;
           setSubmitting(false);
           registerNewUser();
         }}
       >
         <StyledStepForm autoComplete="off" noValidate>
-          <Label htmlFor="motto">What's your motto?</Label>
-          <StyledTextArea component="textarea" name="motto" rows="2" />
+          <Label htmlFor="location">What's your location?</Label>
+          <StyledField name="location" />
           <ErrorBox>
-            <ErrorMessage component={Error} name="motto" />
+            <ErrorMessage component={Error} name="location" />
           </ErrorBox>
           <Label htmlFor="about">Tell us more about yourself</Label>
           <StyledTextArea component="textarea" name="about" rows="6" />

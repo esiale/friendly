@@ -1,8 +1,19 @@
-import { lazy, Suspense, useState, useEffect } from 'react';
+import { lazy, Suspense, useState, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Switch } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import GlobalStyle from './theme/globalStyles';
+import { doc, updateDoc } from 'firebase/firestore';
+import {
+  getDatabase,
+  ref,
+  onValue,
+  push,
+  onDisconnect,
+  set,
+  serverTimestamp,
+} from 'firebase/database';
+import GlobalStyle from './global/globalStyles';
 import LoginLoader from './components/common/LoginLoader';
+import AuthenticatedLoader from './components/common/AuthenticatedLoader';
 import ProtectedRoutes from './routes/ProtectedRoutes';
 import PublicRoute from './routes/PublicRoute';
 import PrivateRoute from './routes/PrivateRoute';
@@ -15,12 +26,30 @@ const SignUpForm = lazy(() => import('./components/Login/SignUpForm'));
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isCreatingNewUser, setIsCreatingNewUser] = useState(false);
+  const userId = useRef(null);
 
   useEffect(() => {
-    const checkLoginStatus = async () => {
+    const checkLoginStatus = () => {
       const auth = getAuth();
-      await onAuthStateChanged(auth, (user) => {
+      onAuthStateChanged(auth, async (user) => {
         if (user) {
+          userId.current = user.uid;
+          const realTimeDb = getDatabase();
+          const connectedRef = ref(realTimeDb, '.info/connected');
+          const lastSeenRef = ref(realTimeDb, `users/${user.uid}/lastSeen`);
+          const connectionsRef = ref(
+            realTimeDb,
+            `users/${user.uid}/connections`
+          );
+          onValue(connectedRef, async (snap) => {
+            if (snap.val() === true) {
+              const connection = push(connectionsRef);
+              onDisconnect(connection).remove();
+              set(connection, true);
+              onDisconnect(lastSeenRef).set(serverTimestamp());
+            }
+          });
           setIsLoggedIn(true);
         } else {
           setIsLoggedIn(false);
@@ -29,6 +58,14 @@ const App = () => {
     };
     checkLoginStatus();
   }, []);
+
+  if (isCreatingNewUser)
+    return (
+      <>
+        <GlobalStyle />
+        <AuthenticatedLoader />
+      </>
+    );
 
   return (
     <>
@@ -43,11 +80,11 @@ const App = () => {
             </PublicRoute>
             <PublicRoute path="/register" isLoggedIn={isLoggedIn}>
               <Login>
-                <SignUpForm />
+                <SignUpForm setIsCreatingNewUser={setIsCreatingNewUser} />
               </Login>
             </PublicRoute>
             <PrivateRoute path="/" isLoggedIn={isLoggedIn}>
-              <Main>
+              <Main userId={userId.current}>
                 <ProtectedRoutes />
               </Main>
             </PrivateRoute>

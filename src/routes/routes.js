@@ -1,5 +1,6 @@
-import Home from '../components/Main/Home';
-import Messages from '../components/Main/Messages';
+import Home from '../components/Home';
+import Messages from '../components/Messages';
+import Profile from '../components/Profile';
 
 const routes = [
   {
@@ -10,6 +11,11 @@ const routes = [
   {
     path: 'messages',
     component: Messages,
+    exact: true,
+  },
+  {
+    path: 'profile',
+    component: Profile,
     exact: true,
   },
 ];

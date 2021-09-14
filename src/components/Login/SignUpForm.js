@@ -39,7 +39,7 @@ const StyledPara = styled.p`
   font-size: 1.4rem;
 `;
 
-const SignUpForm = () => {
+const SignUpForm = (props) => {
   const [step, setStep] = useState('step1');
   const [title, setTitle] = useState('Create new account');
   const newUserData = useRef({
@@ -48,11 +48,13 @@ const SignUpForm = () => {
     email: null,
     password: null,
     picture: null,
-    motto: null,
+    location: null,
     about: null,
   });
+  const { setIsCreatingNewUser } = props;
 
   const registerNewUser = async () => {
+    setIsCreatingNewUser(true);
     const auth = getAuth();
     let pictureUrl = null;
     try {
@@ -61,23 +63,24 @@ const SignUpForm = () => {
         newUserData.current.email,
         newUserData.current.password
       );
-      const userID = userCredential.user.uid;
+      const userId = userCredential.user.uid;
       const storage = getStorage();
       if (newUserData.current.picture === null) {
         const storageRef = ref(storage, 'users/default.jpg');
         pictureUrl = await getDownloadURL(storageRef);
       } else {
-        const storageRef = ref(storage, `users/${userID}/${uniqid()}.jpg`);
+        const storageRef = ref(storage, `users/${userId}/${uniqid()}.jpg`);
         await uploadBytes(storageRef, newUserData.current.picture);
         pictureUrl = await getDownloadURL(storageRef);
       }
-      await setDoc(doc(database, 'users', userID), {
+      await setDoc(doc(database, 'users', userId), {
         firstName: newUserData.current.firstName,
         lastName: newUserData.current.lastName,
-        motto: newUserData.current.motto,
+        location: newUserData.current.location,
         about: newUserData.current.about,
         picture: pictureUrl,
       });
+      setIsCreatingNewUser(false);
     } catch (err) {
       console.log(err);
     }

@@ -4,6 +4,8 @@ import { getFirestore } from 'firebase/firestore';
 const firebaseConfig = {
   apiKey: 'AIzaSyDiuDnXs479rsygkEbkjNB8tTM-QG7zuxw',
   authDomain: 'friendly-56b13.firebaseapp.com',
+  databaseURL:
+    'https://friendly-56b13-default-rtdb.europe-west1.firebasedatabase.app',
   projectId: 'friendly-56b13',
   storageBucket: 'friendly-56b13.appspot.com',
   messagingSenderId: '645722080622',

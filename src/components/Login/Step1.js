@@ -55,10 +55,10 @@ const Step1 = (props) => {
         validateOnBlur={false}
         validationSchema={Yup.object({
           firstName: Yup.string()
-            .max(30, 'Must be less than 30 characters')
+            .max(20, 'Must be less than 20 characters')
             .required('Required'),
           lastName: Yup.string()
-            .max(30, 'Must be less than 30 characters')
+            .max(20, 'Must be less than 20 characters')
             .required('Required'),
           email: Yup.string().test(
             'emailValidation',
