@@ -1,6 +1,5 @@
-import { getAuth } from 'firebase/auth';
-import { useEffect, useState, useRef } from 'react';
-import { doc, getDoc, setDoc, Timestamp } from 'firebase/firestore';
+import { useState } from 'react';
+import React from 'react';
 import AuthenticatedLoader from '../common/AuthenticatedLoader';
 import styled from 'styled-components/macro';
 import Header from './Header';
@@ -16,7 +15,9 @@ const Wrapper = styled.div`
 const Content = styled.div`
   width: 100%;
   height: 100%;
-  margin-top: 50px;
+  margin-top: 75px;
+  display: flex;
+  justify-content: center;
 `;
 
 const Main = (props) => {
@@ -28,7 +29,9 @@ const Main = (props) => {
   return (
     <Wrapper>
       <Header userId={userId} />
-      <Content>{props.children}</Content>
+      <Content>
+        {React.cloneElement(props.children, { userId: userId })}
+      </Content>
     </Wrapper>
   );
 };

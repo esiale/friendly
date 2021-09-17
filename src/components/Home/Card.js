@@ -1,4 +1,4 @@
-import { getDatabase, ref, onValue } from 'firebase/database';
+import { getDatabase, ref, onValue, off } from 'firebase/database';
 import { useEffect, useState } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
 import onlineIcon from '../../images/circleOnline.png';
@@ -7,13 +7,15 @@ import database from '../../config/firebase.config';
 import formatDistance from 'date-fns/formatDistance';
 import styled from 'styled-components/macro';
 import Spinner from '../common/Spinner';
+import devices from '../../global/devices';
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  justify-content: space-between;
   width: 150px;
-  height: 225px;
+  height: 235px;
+  padding-bottom: 10px;
   overflow: hidden;
   border-radius: 5px;
   background-color: rgb(246, 246, 246);
@@ -23,22 +25,41 @@ const Wrapper = styled.div`
   &:hover {
     background-color: rgb(235, 235, 235);
   }
+
+  @media ${devices.mobileL} {
+    width: 200px;
+    height: 300px;
+  }
 `;
 
 const Paragraph = styled.p`
   width: 100%;
   font-size: 0.9rem;
   margin: 0 7px;
+
+  @media ${devices.mobileL} {
+    font-size: 1.1rem;
+  }
 `;
 
-const Name = styled(Paragraph)``;
+const Name = styled(Paragraph)`
+  text-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.4);
+  /* font-weight: 600; */
+`;
 
 const Location = styled(Paragraph)`
   font-size: 0.8rem;
+  height: 12px;
+
+  @media ${devices.mobileL} {
+    font-size: 1rem;
+    height: 16px;
+  }
 `;
 
 const Picture = styled.img`
   width: 100%;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
 `;
 
 const Icon = styled.img`
@@ -48,14 +69,24 @@ const Icon = styled.img`
 
 const StatusPanel = styled.div`
   width: 100%;
+  height: 35px;
   font-size: 0.8rem;
   display: flex;
+  align-items: center;
   gap: 3px;
-  margin: 5px 0px 0 7px;
+  margin: 5px 0 0 5px;
+
+  @media ${devices.mobileL} {
+    margin-top: 10px;
+  }
 `;
 
 const LastSeen = styled.span`
   font-size: 0.75rem;
+
+  @media ${devices.mobileL} {
+    font-size: 0.9rem;
+  }
 `;
 
 const Card = (props) => {
@@ -64,7 +95,6 @@ const Card = (props) => {
   const [lastSeen, setLastSeen] = useState(null);
   const [userData, setUserData] = useState({
     firstName: null,
-    lastName: null,
     location: null,
     picture: null,
   });
@@ -72,13 +102,12 @@ const Card = (props) => {
   const { userId } = props;
 
   useEffect(() => {
+    const db = getDatabase();
+    const userRef = ref(db, `users/${userId}`);
     const getOnlineStatus = (userId) => {
-      const db = getDatabase();
-      const userRef = ref(db, `users/${userId}`);
-
       onValue(userRef, (snapshot) => {
         const data = snapshot.val();
-        if (!data.connections) {
+        if (!data.online) {
           setIsOnline(false);
           setLastSeen(processTimestamp(data.lastSeen));
         } else {
@@ -88,6 +117,7 @@ const Card = (props) => {
     };
     getOnlineStatus(userId);
     setIsLoading(false);
+    return () => off(userRef);
   }, [userId]);
 
   useEffect(() => {
@@ -98,7 +128,6 @@ const Card = (props) => {
         const data = docSnap.data();
         setUserData({
           firstName: data.firstName,
-          lastName: data.lastName,
           location: data.location,
           picture: data.picture,
         });
@@ -107,6 +136,7 @@ const Card = (props) => {
       }
     };
     getUserData(userId);
+    return () => setUserData({ ...userData });
   }, [userId]);
 
   const processTimestamp = (value) => {
@@ -137,7 +167,7 @@ const Card = (props) => {
         ) : (
           <>
             <Icon src={offlineIcon} alt="offline icon" />
-            <LastSeen>Last seen: {lastSeen}</LastSeen>
+            <LastSeen>Last seen {lastSeen} ago</LastSeen>
           </>
         )}
       </StatusPanel>

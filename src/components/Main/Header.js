@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
+import { getAuth, signOut } from 'firebase/auth';
+import { goOffline, getDatabase } from 'firebase/database';
 import database from '../../config/firebase.config';
 import devices from '../../global/devices';
 import styled from 'styled-components/macro';
@@ -106,6 +108,17 @@ const Header = (props) => {
     getCurrentUserData(userId);
   }, [userId]);
 
+  const signOutUser = async () => {
+    const auth = getAuth();
+    const db = getDatabase();
+    try {
+      goOffline(db);
+      await signOut(auth);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <Wrapper>
       <Logo>
@@ -120,7 +133,7 @@ const Header = (props) => {
         </Link>
       </Navigation>
       <UserPanel>
-        <Picture src={currentUserData.picture} />
+        <Picture src={currentUserData.picture} onClick={() => signOutUser()} />
         <Name>{currentUserData.firstName}</Name>
       </UserPanel>
     </Wrapper>

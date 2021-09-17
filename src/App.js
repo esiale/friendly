@@ -1,30 +1,28 @@
-import { lazy, Suspense, useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Switch } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { doc, updateDoc } from 'firebase/firestore';
 import {
   getDatabase,
   ref,
   onValue,
-  push,
   onDisconnect,
   set,
   serverTimestamp,
+  goOnline,
 } from 'firebase/database';
 import GlobalStyle from './global/globalStyles';
-import LoginLoader from './components/common/LoginLoader';
 import AuthenticatedLoader from './components/common/AuthenticatedLoader';
 import ProtectedRoutes from './routes/ProtectedRoutes';
 import PublicRoute from './routes/PublicRoute';
 import PrivateRoute from './routes/PrivateRoute';
 import database from './config/firebase.config';
-
-const Login = lazy(() => import('./components/Login'));
-const Main = lazy(() => import('./components/Main/'));
-const SignInForm = lazy(() => import('./components/Login/SignInForm'));
-const SignUpForm = lazy(() => import('./components/Login/SignUpForm'));
+import Login from './components/Login';
+import Main from './components/Main';
+import SignInForm from './components/Login/SignInForm';
+import SignUpForm from './components/Login/SignUpForm';
 
 const App = () => {
+  const [isAuthenticating, setIsAuthenticating] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isCreatingNewUser, setIsCreatingNewUser] = useState(false);
   const userId = useRef(null);
@@ -38,28 +36,27 @@ const App = () => {
           const realTimeDb = getDatabase();
           const connectedRef = ref(realTimeDb, '.info/connected');
           const lastSeenRef = ref(realTimeDb, `users/${user.uid}/lastSeen`);
-          const connectionsRef = ref(
-            realTimeDb,
-            `users/${user.uid}/connections`
-          );
+          const onlineStatusRef = ref(realTimeDb, `users/${user.uid}/online`);
+          goOnline(realTimeDb);
           onValue(connectedRef, async (snap) => {
             if (snap.val() === true) {
-              const connection = push(connectionsRef);
-              onDisconnect(connection).remove();
-              set(connection, true);
+              onDisconnect(onlineStatusRef).set(false);
               onDisconnect(lastSeenRef).set(serverTimestamp());
+              set(onlineStatusRef, true);
             }
           });
           setIsLoggedIn(true);
+          setIsAuthenticating(false);
         } else {
           setIsLoggedIn(false);
+          setIsAuthenticating(false);
         }
       });
     };
     checkLoginStatus();
   }, []);
 
-  if (isCreatingNewUser)
+  if (isCreatingNewUser || isAuthenticating)
     return (
       <>
         <GlobalStyle />
@@ -71,25 +68,27 @@ const App = () => {
     <>
       <GlobalStyle />
       <Router>
-        <Suspense fallback={<LoginLoader />}>
-          <Switch>
-            <PublicRoute path="/login" isLoggedIn={isLoggedIn}>
-              <Login>
-                <SignInForm />
-              </Login>
-            </PublicRoute>
-            <PublicRoute path="/register" isLoggedIn={isLoggedIn}>
-              <Login>
-                <SignUpForm setIsCreatingNewUser={setIsCreatingNewUser} />
-              </Login>
-            </PublicRoute>
-            <PrivateRoute path="/" isLoggedIn={isLoggedIn}>
-              <Main userId={userId.current}>
-                <ProtectedRoutes />
-              </Main>
-            </PrivateRoute>
-          </Switch>
-        </Suspense>
+        <Switch>
+          <PublicRoute path="/login" isLoggedIn={isLoggedIn}>
+            <Login>
+              <SignInForm />
+            </Login>
+          </PublicRoute>
+          <PublicRoute path="/register" isLoggedIn={isLoggedIn}>
+            <Login>
+              <SignUpForm setIsCreatingNewUser={setIsCreatingNewUser} />
+            </Login>
+          </PublicRoute>
+          <PrivateRoute
+            path="/"
+            isLoggedIn={isLoggedIn}
+            userId={userId.current}
+          >
+            <Main>
+              <ProtectedRoutes />
+            </Main>
+          </PrivateRoute>
+        </Switch>
       </Router>
     </>
   );

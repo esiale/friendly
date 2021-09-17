@@ -1,4 +1,5 @@
 import { Route, Redirect } from 'react-router-dom';
+import React from 'react';
 
 const PrivateRoute = ({ children, isLoggedIn, ...rest }) => {
   return (
@@ -6,7 +7,7 @@ const PrivateRoute = ({ children, isLoggedIn, ...rest }) => {
       {...rest}
       render={({ location }) =>
         isLoggedIn ? (
-          children
+          React.cloneElement(children, { ...rest })
         ) : (
           <Redirect
             to={{
