@@ -28,21 +28,21 @@ const App = () => {
   const userId = useRef(null);
 
   useEffect(() => {
+    const realTimeDb = getDatabase();
+
     const checkLoginStatus = () => {
       const auth = getAuth();
       onAuthStateChanged(auth, async (user) => {
         if (user) {
           userId.current = user.uid;
-          const realTimeDb = getDatabase();
           const connectedRef = ref(realTimeDb, '.info/connected');
           const lastSeenRef = ref(realTimeDb, `users/${user.uid}/lastSeen`);
           const onlineStatusRef = ref(realTimeDb, `users/${user.uid}/online`);
-          goOnline(realTimeDb);
           onValue(connectedRef, async (snap) => {
             if (snap.val() === true) {
               onDisconnect(onlineStatusRef).set(false);
               onDisconnect(lastSeenRef).set(serverTimestamp());
-              set(onlineStatusRef, true);
+              await set(onlineStatusRef, true);
             }
           });
           setIsLoggedIn(true);

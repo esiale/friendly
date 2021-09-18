@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
 import { getAuth, signOut } from 'firebase/auth';
-import { goOffline, getDatabase } from 'firebase/database';
+import { getDatabase, ref, set, serverTimestamp, off } from 'firebase/database';
 import database from '../../config/firebase.config';
 import devices from '../../global/devices';
 import styled from 'styled-components/macro';
@@ -111,8 +111,13 @@ const Header = (props) => {
   const signOutUser = async () => {
     const auth = getAuth();
     const db = getDatabase();
+    const connectedRef = ref(db, '.info/connected');
+    const lastSeenRef = ref(db, `users/${userId}/lastSeen`);
+    const onlineStatusRef = ref(db, `users/${userId}/online`);
     try {
-      goOffline(db);
+      await set(onlineStatusRef, false);
+      await set(lastSeenRef, serverTimestamp());
+      await off(connectedRef);
       await signOut(auth);
     } catch (err) {
       console.log(err);
@@ -125,7 +130,7 @@ const Header = (props) => {
         Friend<LogoSpan>ly</LogoSpan>
       </Logo>
       <Navigation>
-        <Link to={'/home'}>
+        <Link to={'/'}>
           <Icon src={homeIcon} />
         </Link>
         <Link to={'/messages'}>

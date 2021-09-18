@@ -10,7 +10,7 @@ const PublicRoute = ({ children, isLoggedIn, ...rest }) => {
         ) : (
           <Redirect
             to={{
-              pathname: '/home',
+              pathname: '/',
               state: { from: location },
             }}
           />

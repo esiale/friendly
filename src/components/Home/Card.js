@@ -136,7 +136,7 @@ const Card = (props) => {
       }
     };
     getUserData(userId);
-    return () => setUserData({ ...userData });
+    return () => setUserData((data) => data);
   }, [userId]);
 
   const processTimestamp = (value) => {

@@ -1,6 +1,4 @@
-import { useState } from 'react';
 import React from 'react';
-import AuthenticatedLoader from '../common/AuthenticatedLoader';
 import styled from 'styled-components/macro';
 import Header from './Header';
 
@@ -21,11 +19,7 @@ const Content = styled.div`
 `;
 
 const Main = (props) => {
-  const [loading, setLoading] = useState(false);
   const { userId } = props;
-
-  if (loading) return <AuthenticatedLoader />;
-
   return (
     <Wrapper>
       <Header userId={userId} />

@@ -4,7 +4,13 @@ import routes from './routes';
 const ProtectedRoutes = (props) => (
   <Switch>
     {routes.map(({ component: Component, path, exact }) => (
-      <Route path={`/${path}`} key={path} exact={exact} component={Component} />
+      <Route
+        {...props}
+        path={`/${path}`}
+        key={path}
+        exact={exact}
+        render={(routerProps) => <Component {...routerProps} {...props} />}
+      />
     ))}
   </Switch>
 );

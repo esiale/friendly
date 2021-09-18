@@ -27,18 +27,27 @@ const StyledStepForm = styled(StyledForm)`
 const Step1 = (props) => {
   const { newUserData, setStep } = props;
 
-  // Yup handles custom tests asynchronously which results in database call being made before previous validations are met.
-  // This resulted in Firebase throwing errors because of invalid e-mail.
-  // Writing a separate function to handle all validation in Yup might seem counterintuitive but is the cleanest solution.
+  // const validateEmail = async (email) => {
+  //   if (!email) return 'Required';
+  //   if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  //     const auth = getAuth();
+  //     const signInMethods = await fetchSignInMethodsForEmail(auth, email);
+  //     if (!signInMethods.length) return true;
+  //     return 'An account with this email already exists';
+  //   } else return 'Invalid e-mail';
+  // };
 
   const validateEmail = async (email) => {
     if (!email) return 'Required';
-    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      const auth = getAuth();
+    const auth = getAuth();
+    try {
       const signInMethods = await fetchSignInMethodsForEmail(auth, email);
       if (!signInMethods.length) return true;
       return 'An account with this email already exists';
-    } else return 'Invalid e-mail';
+    } catch (error) {
+      console.log(error);
+      return 'Invalid e-mail';
+    }
   };
 
   return (

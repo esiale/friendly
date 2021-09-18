@@ -74,7 +74,6 @@ const Home = (props) => {
   const [users, setUsers] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const { userId } = props;
-
   useEffect(() => {
     const db = getDatabase();
     const usersRef = ref(db, 'users');
@@ -110,7 +109,7 @@ const Home = (props) => {
     };
     getUsers();
     return () => off(usersRef);
-  }, []);
+  }, [userId]);
 
   if (isLoading)
     return (

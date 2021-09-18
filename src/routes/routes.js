@@ -4,7 +4,7 @@ import Profile from '../components/Profile';
 
 const routes = [
   {
-    path: 'home',
+    path: '',
     component: Home,
     exact: true,
   },
