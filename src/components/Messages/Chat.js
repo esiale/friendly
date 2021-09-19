@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { collection, onSnapshot } from 'firebase/firestore';
+import { useEffect, useState, useRef } from 'react';
+import { collection, onSnapshot, doc, updateDoc } from 'firebase/firestore';
 import database from '../../config/firebase.config';
 import styled from 'styled-components/macro';
 
@@ -12,33 +12,36 @@ const Wrapper = styled.div`
 
 const MessagesWrapper = styled.div``;
 
-const InputWrapper = styled.div``;
-
 const Chat = (props) => {
-  const { currentChat } = props;
+  const { currentChat, userId, targetUserId } = props;
+  // const messagesRef = useRef([]);
+  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     if (!currentChat) return;
+    // const readStatusRef = doc(database, 'users', userId, 'chats', targetUserId);
     const unsubscribeFromChat = onSnapshot(
       collection(database, 'chats', currentChat, 'messages'),
       (snapshot) => {
-        console.log(snapshot);
+        snapshot.docChanges().forEach(async (change) => {
+          if (change.type === 'added') {
+            setMessages((messages) => [...messages, change.doc.data()]);
+            // await updateDoc(readStatusRef, { read: true });
+          }
+        });
       }
     );
 
     return () => unsubscribeFromChat();
-  });
+  }, [currentChat]);
+
   return (
     <Wrapper>
-      <MessagesWrapper></MessagesWrapper>
-      <InputWrapper>
-        <form>
-          <label htmlFor="message-input">
-            <input type="text" />
-          </label>
-          <input type="submit" value="Send message" />
-        </form>
-      </InputWrapper>
+      <MessagesWrapper>
+        {messages.map((message) => (
+          <p>{message.message}</p>
+        ))}
+      </MessagesWrapper>
     </Wrapper>
   );
 };
