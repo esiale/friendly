@@ -13,35 +13,11 @@ const Wrapper = styled.div`
 const MessagesWrapper = styled.div``;
 
 const Chat = (props) => {
-  const { currentChat, userId, targetUserId } = props;
-  // const messagesRef = useRef([]);
-  const [messages, setMessages] = useState([]);
-
-  useEffect(() => {
-    if (!currentChat) return;
-    // const readStatusRef = doc(database, 'users', userId, 'chats', targetUserId);
-    const unsubscribeFromChat = onSnapshot(
-      collection(database, 'chats', currentChat, 'messages'),
-      (snapshot) => {
-        snapshot.docChanges().forEach(async (change) => {
-          if (change.type === 'added') {
-            setMessages((messages) => [...messages, change.doc.data()]);
-            // await updateDoc(readStatusRef, { read: true });
-          }
-        });
-      }
-    );
-
-    return () => unsubscribeFromChat();
-  }, [currentChat]);
+  const { chats } = props;
 
   return (
     <Wrapper>
-      <MessagesWrapper>
-        {messages.map((message) => (
-          <p>{message.message}</p>
-        ))}
-      </MessagesWrapper>
+      <MessagesWrapper></MessagesWrapper>
     </Wrapper>
   );
 };

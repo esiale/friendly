@@ -6,6 +6,9 @@ import {
   addDoc,
   collection,
   serverTimestamp,
+  query,
+  where,
+  onSnapshot,
 } from 'firebase/firestore';
 import styled from 'styled-components/macro';
 import Chat from './Chat';
@@ -23,65 +26,36 @@ const Wrapper = styled.div`
 `;
 
 const Messages = (props) => {
-  const [currentChat, setCurrentChat] = useState(null);
+  const [chats, setChats] = useState([]);
   const { userId } = props;
 
   useEffect(() => {
-    const initiateChat = async (targetUser) => {
-      const chatroom = `${
-        userId < targetUser
-          ? `${userId}_${targetUser}`
-          : `${targetUser}_${userId}`
-      }`;
-      const chatsRef = doc(database, 'chats', chatroom);
-      // const initiatorChatRef = doc(
-      //   database,
-      //   'users',
-      //   userId,
-      //   'chats',
-      //   targetUser
-      // );
-      // const receiverChatRef = doc(
-      //   database,
-      //   'users',
-      //   targetUser,
-      //   'chats',
-      //   userId
-      // );
-      const docSnap = await getDoc(chatsRef);
-      if (!docSnap.exists()) {
-        await setDoc(chatsRef, { exists: true });
-        // await setDoc(initiatorChatRef, { exists: true });
-        // await setDoc(receiverChatRef, { exists: true });
-      }
-      setCurrentChat(chatroom);
+    const filterTargetUserId = (chat) => {
+      return chat.users.find((item) => item !== userId);
     };
-    if (props.location.targetUser) {
-      initiateChat(props.location.targetUser.userId);
-    }
-  }, [userId, props.location.targetUser]);
 
-  const sendMessage = async (message) => {
-    const chatRef = collection(database, 'chats', currentChat, 'messages');
-    // const readStatusRef = doc(
-    //   database,
-    //   'users',
-    //   props.location.targetUser.userId,
-    //   'chats',
-    //   userId
-    // );
-    try {
-      await addDoc(chatRef, {
-        sender: userId,
-        receipent: props.location.targetUser.userId,
-        message: message,
-        timestamp: serverTimestamp(),
+    const getTargetUserData = async (chat) => {
+      const id = filterTargetUserId(chat);
+      const docRef = doc(database, 'users', id);
+      const snapshot = await getDoc(docRef);
+      const userData = snapshot.data();
+      return { targetUserName: userData.firstName, picture: userData.picture };
+    };
+
+    const chatsRef = collection(database, 'messages');
+    const chatsQuery = query(
+      chatsRef,
+      where('users', 'array-contains', userId)
+    );
+
+    const unsubscribeFromChat = onSnapshot(chatsQuery, (snapshot) => {
+      snapshot.forEach(async (doc) => {
+        const targetUserData = await getTargetUserData(doc.data());
+        setChats((prev) => [...prev, { ...doc.data(), ...targetUserData }]);
       });
-      // await setDoc(readStatusRef, { read: false });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    });
+    return () => unsubscribeFromChat();
+  }, [userId]);
 
   return (
     <Wrapper>
@@ -90,13 +64,9 @@ const Messages = (props) => {
       ) : (
         <Header />
       )}
-      <List />
-      <Chat
-        currentChat={currentChat}
-        userId={userId}
-        targetUserId={props.location.targetUser.userId}
-      />
-      <Input sendMessage={sendMessage} />
+      <List chats={chats} userId={userId} />
+      <Chat chats={chats} />
+      <Input />
     </Wrapper>
   );
 };
