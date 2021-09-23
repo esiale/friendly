@@ -5,7 +5,7 @@ import Header from './Header';
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 250, 250, 1);
+  background-color: rgba(var(--background), 1);
   display: flex;
   flex-direction: column;
 `;

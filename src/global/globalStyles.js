@@ -5,6 +5,7 @@ const GlobalStyle = createGlobalStyle`
     --primary: 243, 156, 18;
     --secondary: 253, 99, 3;
     --tertiary: 246, 184, 85;
+    --background: 255, 250, 250;
   }
 
   * {

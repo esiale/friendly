@@ -21,12 +21,14 @@ const Wrapper = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 `;
 
 const Messages = (props) => {
   const [chats, setChats] = useState([]);
+  const [currentChat, setCurrentChat] = useState(null);
   const { userId } = props;
 
   useEffect(() => {
@@ -49,9 +51,23 @@ const Messages = (props) => {
     );
 
     const unsubscribeFromChat = onSnapshot(chatsQuery, (snapshot) => {
-      snapshot.forEach(async (doc) => {
-        const targetUserData = await getTargetUserData(doc.data());
-        setChats((prev) => [...prev, { ...doc.data(), ...targetUserData }]);
+      snapshot.docChanges().forEach(async (change) => {
+        const targetUserData = await getTargetUserData(change.doc.data());
+        if (change.type === 'added') {
+          setChats((prev) => [...prev, change.doc.data()]);
+        }
+        if (change.type === 'modified') {
+          const databaseChatId = change.doc.id;
+          setChats((prev) => {
+            const updatedChatList = prev.map((chat) => {
+              if (chat.id === databaseChatId) {
+                return change.doc.data();
+              }
+              return chat;
+            });
+            return updatedChatList;
+          });
+        }
       });
     });
     return () => unsubscribeFromChat();
@@ -64,7 +80,12 @@ const Messages = (props) => {
       ) : (
         <Header />
       )}
-      <List chats={chats} userId={userId} />
+      <List
+        chats={chats}
+        userId={userId}
+        setCurrentChat={setCurrentChat}
+        currentChat={currentChat}
+      />
       <Chat chats={chats} />
       <Input />
     </Wrapper>
