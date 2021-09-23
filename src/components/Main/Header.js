@@ -30,7 +30,7 @@ const Logo = styled.p`
   text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.9);
   visibility: hidden;
 
-  @media ${devices.mobileL} {
+  @media ${devices.tablet} {
     visibility: visible;
   }
 `;

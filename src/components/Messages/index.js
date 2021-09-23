@@ -11,10 +11,12 @@ import {
   onSnapshot,
 } from 'firebase/firestore';
 import styled from 'styled-components/macro';
+import devices from '../../global/devices';
 import Chat from './Chat';
 import List from './List';
 import Header from './Header';
 import Input from './Input';
+import Burger from './Burger';
 import database from '../../config/firebase.config';
 
 const Wrapper = styled.div`
@@ -24,12 +26,25 @@ const Wrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  @media ${devices.tablet} {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      'list header'
+      'list chat'
+      'list input';
+  }
 `;
 
 const Messages = (props) => {
   const [chats, setChats] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
+  const [listVisible, setListVisible] = useState(false);
   const { userId } = props;
+
+  const toggleListVisible = () => setListVisible((prev) => !prev);
 
   useEffect(() => {
     const filterTargetUserId = (chat) => {
@@ -75,6 +90,7 @@ const Messages = (props) => {
 
   return (
     <Wrapper>
+      <Burger listVisible={listVisible} toggleListVisible={toggleListVisible} />
       {props.location.targetUser ? (
         <Header targetUserId={props.location.targetUser.userId} />
       ) : (
@@ -85,6 +101,7 @@ const Messages = (props) => {
         userId={userId}
         setCurrentChat={setCurrentChat}
         currentChat={currentChat}
+        listVisible={listVisible}
       />
       <Chat chats={chats} />
       <Input />

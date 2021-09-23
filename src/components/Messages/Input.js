@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import styled from 'styled-components/macro';
 
 const StyledForm = styled.form`
+  grid-area: input;
   width: 100%;
 `;
 

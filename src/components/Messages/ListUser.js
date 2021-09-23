@@ -1,4 +1,5 @@
 import styled from 'styled-components/macro';
+import devices from '../../global/devices';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -7,12 +8,14 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
   border-bottom: 1px solid rgba(100, 100, 100, 0.2);
-  ${(props) =>
-    props.isActive
-      ? 'background-color: rgb(var(--tertiary))'
-      : 'background-color: rgb(240, 240, 240)'};
+  background-color: ${(isActive) =>
+    isActive ? 'rgb(246, 184, 85)' : 'rgb(240, 240, 240)'};
+  background-color: ${(props) =>
+    props.isRead ? 'rgb(246, 184, 85)' : 'rgb(240, 240, 240)'};
 
-  ${(props) => (props.isRead ? 'font-weight: 400' : 'font-weight: 600')};
+  @media ${devices.tablet} {
+    border-right: 1px solid rgba(100, 100, 100, 0.2);
+  }
 `;
 
 const TextContainer = styled.div`
@@ -24,10 +27,12 @@ const TextContainer = styled.div`
   margin-left: 7px;
 `;
 
-const Name = styled.div``;
+const Name = styled.div`
+  font-size: 0.9rem;
+`;
 
 const LastMessage = styled.div`
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-style: italic;
   color: rgb(100, 100, 100);
 `;
@@ -40,7 +45,14 @@ const Picture = styled.img`
 `;
 
 const ListUser = (props) => {
-  const { chat, setCurrentChat, index, isActive, handleClick } = props;
+  const { chat, index, isActive, handleClick, userId } = props;
+
+  const checkIfRead = () => {
+    const [lastMessageObject] = chat.messages.slice(-1);
+    const lastMessageSender = lastMessageObject.sender;
+    if (lastMessageSender === userId) return false;
+    return chat.isRead;
+  };
 
   const processLastMessage = (chat) => {
     const [lastMessageObject] = chat.messages.slice(-1);
@@ -52,7 +64,7 @@ const ListUser = (props) => {
   return (
     <Wrapper
       isActive={isActive}
-      isRead={chat.isRead}
+      isRead={checkIfRead()}
       onClick={() => handleClick(index)}
     >
       <Picture src={chat.picture} alt={`${chat.targetUserName} "picture"`} />
