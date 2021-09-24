@@ -47,6 +47,56 @@ const Messages = (props) => {
   const toggleListVisible = () => setListVisible((prev) => !prev);
 
   useEffect(() => {
+    const checkIfChatExists = async (chatroomId) => {
+      const chatRef = doc(database, 'messages', chatroomId);
+      const docSnap = await getDoc(chatRef);
+      if (docSnap.exists()) return true;
+      return false;
+    };
+
+    const findChat = (chatsList, userId) => {
+      if (!chatsList.length) return false;
+      for (let i = 0; i < chatsList.length; i++) {
+        if (chatsList[i].users.includes(userId)) return i;
+      }
+      return false;
+    };
+
+    const createChat = async (chatroomName, targetUser) => {
+      const newChatRef = doc(database, 'messages', chatroomName);
+      await setDoc(newChatRef, {
+        isRead: false,
+        users: [userId, targetUser],
+        messages: [],
+      });
+    };
+
+    const generateChatroomName = (targetUser) => {
+      return `${
+        userId < targetUser
+          ? `${userId}_${targetUser}`
+          : `${targetUser}_${userId}`
+      }`;
+    };
+
+    const initiateChat = async () => {
+      if (!props.location.targetUser) return;
+      const targetUser = props.location.targetUser.userId;
+      const chatroomName = generateChatroomName(targetUser);
+      const chatExists = await checkIfChatExists(chatroomName);
+      if (chatExists && !chats.length) return;
+      const chatId = findChat(chats, targetUser);
+      if (chatExists) {
+        setCurrentChat(chatId);
+      } else {
+        createChat(chatroomName, targetUser);
+        setCurrentChat(chatId);
+      }
+    };
+    initiateChat();
+  }, [chats, props.location.targetUser, userId]);
+
+  useEffect(() => {
     const filterTargetUserId = (chat) => {
       return chat.users.find((item) => item !== userId);
     };

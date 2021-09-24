@@ -50,21 +50,32 @@ const List = (props) => {
   const { chats, userId, setCurrentChat, currentChat, listVisible } = props;
 
   const handleClick = async (index) => {
-    await MarkAsRead(index);
+    await markAsRead(index);
     setCurrentChat(index);
   };
 
-  const MarkAsRead = async (index) => {
+  const markAsRead = async (index) => {
     const lastMessage = chats[index].messages.slice(-1);
     if (chats[index].isRead || lastMessage.sender === userId) return;
     const docRef = doc(database, 'messages', chats[index].id);
     await updateDoc(docRef, { isRead: true });
   };
 
+  const filterEmptyChats = (chatsList) => {
+    return chatsList.filter((chat) => {
+      if (chat.messages.length) return chat;
+      return false;
+    });
+  };
+
   return (
     <Wrapper listVisible={listVisible}>
-      <Header>{chats.length ? 'Your chats' : 'Your chat list is empty'}</Header>
-      {chats.map((chat, index) => (
+      <Header>
+        {filterEmptyChats(chats).length
+          ? 'Your chats'
+          : 'Your chat list is empty'}
+      </Header>
+      {filterEmptyChats(chats).map((chat, index) => (
         <ListUser
           key={uniqid()}
           chat={chat}

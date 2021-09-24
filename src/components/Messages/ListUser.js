@@ -61,6 +61,7 @@ const ListUser = (props) => {
       lastMessage.slice(0, 23) + (lastMessage.length > 30 ? '...' : '');
     return trimmedMessage;
   };
+
   return (
     <Wrapper
       isActive={isActive}
