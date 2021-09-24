@@ -8,10 +8,10 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
   border-bottom: 1px solid rgba(100, 100, 100, 0.2);
-  background-color: ${(isActive) =>
-    isActive ? 'rgb(246, 184, 85)' : 'rgb(240, 240, 240)'};
+  cursor: pointer;
   background-color: ${(props) =>
-    props.isRead ? 'rgb(246, 184, 85)' : 'rgb(240, 240, 240)'};
+    props.isActive ? 'rgb(246, 184, 85)' : 'rgb(240, 240, 240)'};
+  font-weight: ${(props) => (props.isRead ? 400 : 600)};
 
   @media ${devices.tablet} {
     border-right: 1px solid rgba(100, 100, 100, 0.2);
@@ -45,12 +45,12 @@ const Picture = styled.img`
 `;
 
 const ListUser = (props) => {
-  const { chat, index, isActive, handleClick, userId } = props;
+  const { chat, index, handleClick, userId, currentChat } = props;
 
   const checkIfRead = () => {
     const [lastMessageObject] = chat.messages.slice(-1);
     const lastMessageSender = lastMessageObject.sender;
-    if (lastMessageSender === userId) return false;
+    if (lastMessageSender === userId) return true;
     return chat.isRead;
   };
 
@@ -62,18 +62,20 @@ const ListUser = (props) => {
     return trimmedMessage;
   };
 
+  const checkIfActive = () => {
+    return currentChat === index ? true : false;
+  };
+
   return (
     <Wrapper
-      isActive={isActive}
+      isActive={checkIfActive()}
       isRead={checkIfRead()}
       onClick={() => handleClick(index)}
     >
       <Picture src={chat.picture} alt={`${chat.targetUserName} "picture"`} />
       <TextContainer>
-        {/* <Name>{chat.targetUserName}</Name>
-        <LastMessage>{processLastMessage(chat)}</LastMessage> */}
-        <Name>9IB0W6CV6A0EwV7vTYW7</Name>
-        <LastMessage>9IB0W6CV6A0EwV7vTYW7aaa...</LastMessage>
+        <Name>{chat.targetUserName}</Name>
+        <LastMessage>{processLastMessage(chat)}</LastMessage>
       </TextContainer>
     </Wrapper>
   );

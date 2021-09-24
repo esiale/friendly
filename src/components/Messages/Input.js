@@ -17,19 +17,22 @@ const Counter = styled.div``;
 const Input = (props) => {
   const [message, setMessage] = useState('');
   const inputRef = useRef(null);
-  const { sendMessage } = props;
+  const { sendMessage, markAsRead, currentChat } = props;
 
   const handleChange = (e) => {
-    e.preventDefault();
-    setMessage(e.target.value);
+    e.keyCode === 13 ? handleSubmit() : setMessage(e.target.value);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     inputRef.current.focus();
-    if (message === '') return;
+    if (!validateMessage(message)) return;
     sendMessage(message);
     setMessage('');
+  };
+
+  const validateMessage = (message) => {
+    return message && message.replace(/\s/g, '').length ? true : false;
   };
 
   return (
@@ -44,6 +47,7 @@ const Input = (props) => {
           onChange={(e) => handleChange(e)}
           autoFocus
           ref={inputRef}
+          onFocus={() => markAsRead(currentChat)}
         />
       </StyledLabel>
       <Counter>Characters left: {message.length}/300</Counter>

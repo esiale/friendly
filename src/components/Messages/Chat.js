@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { collection, onSnapshot, doc, updateDoc } from 'firebase/firestore';
+import uniqid from 'uniqid';
 import database from '../../config/firebase.config';
 import styled from 'styled-components/macro';
 
@@ -14,11 +15,19 @@ const Wrapper = styled.div`
 const MessagesWrapper = styled.div``;
 
 const Chat = (props) => {
-  const { chats } = props;
+  const { chat } = props;
 
   return (
     <Wrapper>
-      <MessagesWrapper></MessagesWrapper>
+      <MessagesWrapper>
+        {chat ? (
+          chat.messages.map((message) => (
+            <div key={uniqid()}>{message.message}</div>
+          ))
+        ) : (
+          <p>null</p>
+        )}
+      </MessagesWrapper>
     </Wrapper>
   );
 };

@@ -47,41 +47,59 @@ const Header = styled.div`
 `;
 
 const List = (props) => {
-  const { chats, userId, setCurrentChat, currentChat, listVisible } = props;
+  const {
+    chats,
+    userId,
+    setCurrentChat,
+    currentChat,
+    listVisible,
+    markAsRead,
+  } = props;
 
   const handleClick = async (index) => {
     await markAsRead(index);
     setCurrentChat(index);
   };
 
-  const markAsRead = async (index) => {
-    const lastMessage = chats[index].messages.slice(-1);
-    if (chats[index].isRead || lastMessage.sender === userId) return;
-    const docRef = doc(database, 'messages', chats[index].id);
-    await updateDoc(docRef, { isRead: true });
-  };
-
-  const filterEmptyChats = (chatsList) => {
-    return chatsList.filter((chat) => {
+  const filterEmptyChats = (chats) => {
+    const noEmptyChatsList = chats.filter((chat) => {
       if (chat.messages.length) return chat;
       return false;
     });
+    return noEmptyChatsList;
+  };
+
+  const sortChatsByTimestamp = (chats) => {
+    const sortedChats = chats.sort((a, b) => {
+      const aTimestamp = a.messages.slice(-1)[0].timestamp;
+      const bTimestamp = b.messages.slice(-1)[0].timestamp;
+      return bTimestamp - aTimestamp;
+    });
+    return sortedChats;
+  };
+
+  const filterAndSortChats = (chats) => {
+    const noEmptyChatsList = filterEmptyChats(chats);
+    if (noEmptyChatsList.length < 1) return noEmptyChatsList;
+    const sortedChatsByTimestamp = sortChatsByTimestamp(noEmptyChatsList);
+    console.log(sortedChatsByTimestamp);
+    return sortedChatsByTimestamp;
   };
 
   return (
     <Wrapper listVisible={listVisible}>
       <Header>
-        {filterEmptyChats(chats).length
+        {filterAndSortChats(chats).length
           ? 'Your chats'
           : 'Your chat list is empty'}
       </Header>
-      {filterEmptyChats(chats).map((chat, index) => (
+      {filterAndSortChats(chats).map((chat) => (
         <ListUser
           key={uniqid()}
           chat={chat}
+          currentChat={currentChat}
           setCurrentChat={setCurrentChat}
-          isActive={currentChat === index}
-          index={index}
+          index={chats.indexOf(chat)}
           handleClick={handleClick}
           userId={userId}
         />

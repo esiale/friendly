@@ -3,12 +3,13 @@ import {
   setDoc,
   doc,
   getDoc,
-  addDoc,
   collection,
-  serverTimestamp,
+  updateDoc,
+  arrayUnion,
   query,
   where,
   onSnapshot,
+  serverTimestamp,
 } from 'firebase/firestore';
 import styled from 'styled-components/macro';
 import devices from '../../global/devices';
@@ -90,7 +91,7 @@ const Messages = (props) => {
       if (chatExists) {
         setCurrentChat(chatId);
       } else {
-        createChat(chatroomName, targetUser);
+        await createChat(chatroomName, targetUser);
         setCurrentChat(chatId);
       }
     };
@@ -140,23 +141,45 @@ const Messages = (props) => {
     return () => unsubscribeFromChat();
   }, [userId]);
 
+  const sendMessage = async (message) => {
+    if (currentChat === null) return;
+    const docRef = doc(database, 'messages', chats[currentChat].id);
+    await updateDoc(docRef, {
+      messages: arrayUnion({
+        message: message,
+        sender: userId,
+        timestamp: Date.now(),
+      }),
+      isRead: false,
+    });
+  };
+
+  const markAsRead = async (index) => {
+    if (!chats.length || !index) return;
+    const lastMessage = chats[index].messages.slice(-1);
+    if (chats[index].isRead || lastMessage.sender === userId) return;
+    const docRef = doc(database, 'messages', chats[index].id);
+    await updateDoc(docRef, { isRead: true });
+  };
+
   return (
     <Wrapper>
       <Burger listVisible={listVisible} toggleListVisible={toggleListVisible} />
-      {props.location.targetUser ? (
-        <Header targetUserId={props.location.targetUser.userId} />
-      ) : (
-        <Header />
-      )}
+      <Header />
       <List
         chats={chats}
         userId={userId}
         setCurrentChat={setCurrentChat}
         currentChat={currentChat}
         listVisible={listVisible}
+        markAsRead={markAsRead}
       />
-      <Chat chats={chats} />
-      <Input />
+      <Chat chat={chats[currentChat]} />
+      <Input
+        sendMessage={sendMessage}
+        markAsRead={markAsRead}
+        currentChat={currentChat}
+      />
     </Wrapper>
   );
 };

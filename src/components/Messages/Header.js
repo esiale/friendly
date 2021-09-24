@@ -9,10 +9,12 @@ const Wrapper = styled.div`
 `;
 
 const Header = (props) => {
+  const { targetUserName } = props;
+
   return (
     <Wrapper>
-      {props.targetUserId
-        ? `Chatting with: '${props.targetUserId}`
+      {targetUserName
+        ? `Chatting with ${targetUserName}`
         : `Pick someone to chat with!`}
     </Wrapper>
   );
