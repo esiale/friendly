@@ -65,6 +65,7 @@ const Messages = (props) => {
     const createChat = async (chatroomName, targetUser) => {
       const newChatRef = doc(database, 'messages', chatroomName);
       await setDoc(newChatRef, {
+        id: chatroomName,
         isRead: false,
         users: [userId, targetUser],
         messages: [],
@@ -118,15 +119,16 @@ const Messages = (props) => {
     const unsubscribeFromChat = onSnapshot(chatsQuery, (snapshot) => {
       snapshot.docChanges().forEach(async (change) => {
         const targetUserData = await getTargetUserData(change.doc.data());
+        const chatWithUserData = { ...targetUserData, ...change.doc.data() };
         if (change.type === 'added') {
-          setChats((prev) => [...prev, change.doc.data()]);
+          setChats((prev) => [...prev, chatWithUserData]);
         }
         if (change.type === 'modified') {
           const databaseChatId = change.doc.id;
           setChats((prev) => {
             const updatedChatList = prev.map((chat) => {
               if (chat.id === databaseChatId) {
-                return change.doc.data();
+                return chatWithUserData;
               }
               return chat;
             });
