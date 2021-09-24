@@ -23,6 +23,7 @@ const Wrapper = styled.div`
   @media ${devices.tablet} {
     transform: initial;
     position: initial;
+    border-right: 1px solid rgba(100, 100, 100, 0.2);
   }
 `;
 
@@ -39,8 +40,6 @@ const Header = styled.div`
   border-bottom: 1px solid rgba(100, 100, 100, 0.2);
 
   @media ${devices.tablet} {
-    height: 20px;
-    padding-bottom: 15px;
     justify-content: flex-start;
     padding-left: 10px;
   }
@@ -54,10 +53,12 @@ const List = (props) => {
     currentChat,
     listVisible,
     markAsRead,
+    toggleListVisible,
   } = props;
 
   const handleClick = async (index) => {
     await markAsRead(index);
+    toggleListVisible();
     setCurrentChat(index);
   };
 
@@ -82,7 +83,6 @@ const List = (props) => {
     const noEmptyChatsList = filterEmptyChats(chats);
     if (noEmptyChatsList.length < 1) return noEmptyChatsList;
     const sortedChatsByTimestamp = sortChatsByTimestamp(noEmptyChatsList);
-    console.log(sortedChatsByTimestamp);
     return sortedChatsByTimestamp;
   };
 

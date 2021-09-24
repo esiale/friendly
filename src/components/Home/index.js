@@ -43,6 +43,7 @@ const Wrapper = styled.div`
   grid-auto-rows: minmax(min-content, max-content);
   justify-items: center;
   row-gap: 15px;
+  margin-top: 25px;
 
   @media ${devices.mobileL} {
     row-gap: 25px;

@@ -11,6 +11,7 @@ import {
   onSnapshot,
   serverTimestamp,
 } from 'firebase/firestore';
+import AuthenticatedLoader from '../common/AuthenticatedLoader';
 import styled from 'styled-components/macro';
 import devices from '../../global/devices';
 import Chat from './Chat';
@@ -43,6 +44,7 @@ const Messages = (props) => {
   const [chats, setChats] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
   const [listVisible, setListVisible] = useState(false);
+  const [isCreatingNewChat, setIsCreatingNewChat] = useState(false);
   const { userId } = props;
 
   const toggleListVisible = () => setListVisible((prev) => !prev);
@@ -91,8 +93,8 @@ const Messages = (props) => {
       if (chatExists) {
         setCurrentChat(chatId);
       } else {
+        setIsCreatingNewChat(true);
         await createChat(chatroomName, targetUser);
-        setCurrentChat(chatId);
       }
     };
     initiateChat();
@@ -141,6 +143,13 @@ const Messages = (props) => {
     return () => unsubscribeFromChat();
   }, [userId]);
 
+  useEffect(() => {
+    if (isCreatingNewChat) {
+      setCurrentChat((prev) => prev + 1);
+      setIsCreatingNewChat(false);
+    }
+  }, [isCreatingNewChat]);
+
   const sendMessage = async (message) => {
     if (currentChat === null) return;
     const docRef = doc(database, 'messages', chats[currentChat].id);
@@ -162,10 +171,12 @@ const Messages = (props) => {
     await updateDoc(docRef, { isRead: true });
   };
 
+  if (isCreatingNewChat) return <AuthenticatedLoader />;
+
   return (
     <Wrapper>
       <Burger listVisible={listVisible} toggleListVisible={toggleListVisible} />
-      <Header />
+      <Header currentChat={currentChat} chats={chats} userId={userId} />
       <List
         chats={chats}
         userId={userId}
@@ -173,8 +184,9 @@ const Messages = (props) => {
         currentChat={currentChat}
         listVisible={listVisible}
         markAsRead={markAsRead}
+        toggleListVisible={toggleListVisible}
       />
-      <Chat chat={chats[currentChat]} />
+      <Chat chat={chats[currentChat]} userId={userId} />
       <Input
         sendMessage={sendMessage}
         markAsRead={markAsRead}

@@ -15,6 +15,7 @@ const Wrapper = styled.div`
 `;
 
 const StyledInputButton = styled(Button)`
+  padding: 10px 8px;
   width: 50%;
   text-align: center;
 `;

@@ -7,15 +7,10 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  border-bottom: 1px solid rgba(100, 100, 100, 0.2);
   cursor: pointer;
   background-color: ${(props) =>
-    props.isActive ? 'rgb(246, 184, 85)' : 'rgb(240, 240, 240)'};
-  font-weight: ${(props) => (props.isRead ? 400 : 600)};
-
-  @media ${devices.tablet} {
-    border-right: 1px solid rgba(100, 100, 100, 0.2);
-  }
+    props.isActive ? 'rgb(255, 224, 179)' : 'rgb(240, 240, 240)'};
+  font-weight: ${(props) => (props.isRead ? 400 : 800)};
 `;
 
 const TextContainer = styled.div`
@@ -28,17 +23,17 @@ const TextContainer = styled.div`
 `;
 
 const Name = styled.div`
-  font-size: 0.9rem;
+  font-size: 1rem;
 `;
 
 const LastMessage = styled.div`
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   font-style: italic;
   color: rgb(100, 100, 100);
 `;
 
 const Picture = styled.img`
-  height: 90%;
+  height: 80%;
   border-radius: 50%;
   filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.2));
   margin-left: 10px;
@@ -58,7 +53,7 @@ const ListUser = (props) => {
     const [lastMessageObject] = chat.messages.slice(-1);
     const lastMessage = lastMessageObject.message;
     const trimmedMessage =
-      lastMessage.slice(0, 23) + (lastMessage.length > 30 ? '...' : '');
+      lastMessage.slice(0, 20) + (lastMessage.length > 20 ? '...' : '');
     return trimmedMessage;
   };
 

@@ -34,17 +34,17 @@ const Wrapper = styled.div`
 
 const Paragraph = styled.p`
   width: 100%;
-  font-size: 0.9rem;
-  margin: 0 7px;
+  font-size: 0.8rem;
+  margin: 0 5px;
 
   @media ${devices.mobileL} {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
 `;
 
 const Name = styled(Paragraph)`
   text-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.4);
-  /* font-weight: 600; */
+  margin-top: 5px;
 `;
 
 const Location = styled(Paragraph)`
