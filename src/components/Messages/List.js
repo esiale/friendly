@@ -19,6 +19,7 @@ const Wrapper = styled.div`
   left: 0;
   background-color: rgb(var(--background));
   transition: transform 0.3s ease-in-out;
+  overflow-y: auto;
 
   @media ${devices.tablet} {
     transform: initial;

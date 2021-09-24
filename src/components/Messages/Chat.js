@@ -11,14 +11,20 @@ const Wrapper = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  overflow-y: auto;
 `;
 
 const Chat = (props) => {
   const { chat, userId } = props;
 
+  const wrapperRef = useRef();
+
+  useEffect(() => {
+    wrapperRef.current.scrollTop = wrapperRef.current.scrollHeight;
+  });
+
   return (
-    <Wrapper>
+    <Wrapper ref={wrapperRef}>
       {chat
         ? chat.messages.map((message) => (
             <Message key={uniqid()} message={message} userId={userId} />

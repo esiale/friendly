@@ -4,6 +4,7 @@ import devices from '../../global/devices';
 
 const Wrapper = styled.div`
   width: fit-content;
+  word-break: break-word;
   padding: 7px 12px;
   margin: 4px 10px;
   border-radius: 15px;
