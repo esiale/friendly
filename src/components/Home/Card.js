@@ -80,7 +80,9 @@ const StatusPanel = styled.div`
     margin-top: 10px;
     gap: 5px;
     font-size: 1rem;
-    margin: 5px 0 0 6px;
+    margin: 5px 0 0 0;
+    padding-left: 6px;
+    padding-right: 9px;
   }
 `;
 
