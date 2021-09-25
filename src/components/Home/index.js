@@ -37,13 +37,14 @@ const StyledLink = styled(Link)`
 
 const Wrapper = styled.div`
   width: 100%;
-  height: 100%;
+  height: fit-content;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-auto-rows: minmax(min-content, max-content);
   justify-items: center;
   row-gap: 15px;
   margin-top: 25px;
+  padding-bottom: 25px;
 
   @media ${devices.mobileL} {
     row-gap: 25px;

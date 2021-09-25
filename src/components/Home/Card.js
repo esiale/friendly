@@ -73,8 +73,8 @@ const StatusPanel = styled.div`
   font-size: 0.8rem;
   display: flex;
   align-items: center;
-  gap: 3px;
-  margin: 5px 0 0 5px;
+  gap: 1px;
+  margin: 5px 0 0 3px;
 
   @media ${devices.mobileL} {
     margin-top: 10px;
@@ -167,7 +167,7 @@ const Card = (props) => {
         ) : (
           <>
             <Icon src={offlineIcon} alt="offline icon" />
-            <LastSeen>Last seen {lastSeen} ago</LastSeen>
+            <LastSeen>Last seen 1 minute ago</LastSeen>
           </>
         )}
       </StatusPanel>

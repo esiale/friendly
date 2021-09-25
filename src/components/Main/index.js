@@ -16,7 +16,7 @@ const Content = styled.div`
   margin-top: 50px;
   display: flex;
   justify-content: center;
-  overflow: hidden;
+  overflow: auto;
 `;
 
 const Main = (props) => {

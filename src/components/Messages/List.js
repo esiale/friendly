@@ -58,9 +58,9 @@ const List = (props) => {
   } = props;
 
   const handleClick = async (index) => {
+    setCurrentChat(index);
     await markAsRead(index);
     toggleListVisible();
-    setCurrentChat(index);
   };
 
   const filterEmptyChats = (chats) => {

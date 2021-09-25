@@ -163,12 +163,16 @@ const Messages = (props) => {
     });
   };
 
-  const markAsRead = async (index) => {
-    if (!chats.length || !index) return;
-    const lastMessage = chats[index].messages.slice(-1);
-    if (chats[index].isRead || lastMessage.sender === userId) return;
-    const docRef = doc(database, 'messages', chats[index].id);
-    await updateDoc(docRef, { isRead: true });
+  const markAsRead = async (currentChat) => {
+    if (currentChat === null || !chats.length) return;
+    const lastMessage = chats[currentChat].messages.slice(-1);
+    if (chats[currentChat].isRead || lastMessage.sender === userId) return;
+    try {
+      const docRef = doc(database, 'messages', chats[currentChat].id);
+      await updateDoc(docRef, { isRead: true });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   if (isCreatingNewChat) return <AuthenticatedLoader />;
