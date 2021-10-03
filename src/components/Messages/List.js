@@ -1,6 +1,3 @@
-import { useState } from 'react';
-import { doc, updateDoc } from 'firebase/firestore';
-import database from '../../config/firebase.config';
 import uniqid from 'uniqid';
 import styled from 'styled-components/macro';
 import ListUser from './ListUser';

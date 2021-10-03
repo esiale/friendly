@@ -1,5 +1,4 @@
 import styled from 'styled-components/macro';
-import devices from '../../global/devices';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -11,7 +10,6 @@ const Wrapper = styled.div`
   background-color: ${(props) =>
     props.isActive ? 'rgb(255, 224, 179)' : 'rgb(240, 240, 240)'};
   font-weight: ${(props) => (props.isRead ? 400 : 800)};
-  overflow-y: auto;
 `;
 
 const TextContainer = styled.div`

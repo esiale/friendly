@@ -1,8 +1,6 @@
-import { useEffect, useState, useRef } from 'react';
-import { collection, onSnapshot, doc, updateDoc } from 'firebase/firestore';
+import { useEffect, useRef } from 'react';
 import Message from './Message';
 import uniqid from 'uniqid';
-import database from '../../config/firebase.config';
 import styled from 'styled-components/macro';
 
 const Wrapper = styled.div`

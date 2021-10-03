@@ -126,7 +126,9 @@ const Profile = (match) => {
           <Name>
             {userData.firstName} {userData.lastName}
           </Name>
-          <Location>{userData.location}</Location>
+          {userData.location !== '' ? (
+            <Location>{userData.location}</Location>
+          ) : null}
           <StyledLink
             to={{
               pathname: '/messages',
@@ -136,7 +138,7 @@ const Profile = (match) => {
             Send message
           </StyledLink>
         </BasicInfoWrapper>
-        <About>{userData.about}</About>
+        {userData.about !== '' ? <About>{userData.about}</About> : null}
       </Wrapper>
     </>
   );

@@ -45,12 +45,6 @@ const InputPanel = styled.div`
   align-items: center;
 `;
 
-const Counter = styled.div`
-  font-size: 0.8rem;
-  color: rgba(0, 0, 0, 0.6);
-  margin-left: 5px;
-`;
-
 const Input = (props) => {
   const [message, setMessage] = useState('');
   const inputRef = useRef(null);
@@ -81,7 +75,7 @@ const Input = (props) => {
             id="textinput"
             value={message}
             placeholder="Type your message"
-            maxLength="300"
+            maxLength="1000"
             onChange={(e) => handleChange(e)}
             autoFocus
             ref={inputRef}
@@ -90,7 +84,6 @@ const Input = (props) => {
         </StyledLabel>
         <SendInput type="image" src={sendIcon} />
       </InputPanel>
-      <Counter>Characters left: {message.length}/300</Counter>
     </StyledForm>
   );
 };

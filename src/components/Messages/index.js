@@ -9,7 +9,6 @@ import {
   query,
   where,
   onSnapshot,
-  serverTimestamp,
 } from 'firebase/firestore';
 import AuthenticatedLoader from '../common/AuthenticatedLoader';
 import styled from 'styled-components/macro';

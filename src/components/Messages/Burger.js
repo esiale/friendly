@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import devices from '../../global/devices';
 import styled from 'styled-components/macro';
 
