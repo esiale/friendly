@@ -20,6 +20,7 @@ const Wrapper = styled.header`
   justify-content: space-between;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
   padding: 0 10px;
+  z-index: 1;
 `;
 
 const Logo = styled.p`

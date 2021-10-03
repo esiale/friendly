@@ -104,17 +104,18 @@ const StyledLink = styled(Link)`
 const Profile = (match) => {
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState(null);
-  const userId = useParams();
+  const targetUserId = useParams();
+  console.log(targetUserId, match);
 
   useEffect(() => {
     const getUserData = async () => {
-      const docRef = doc(database, 'users', userId.userId);
+      const docRef = doc(database, 'users', targetUserId.targetUserId);
       const snapshot = await getDoc(docRef);
       setUserData(snapshot.data());
       setIsLoading(false);
     };
     getUserData();
-  }, [userId]);
+  }, [targetUserId]);
 
   if (isLoading) return <AuthenticatedLoader />;
 
@@ -129,14 +130,16 @@ const Profile = (match) => {
           {userData.location !== '' ? (
             <Location>{userData.location}</Location>
           ) : null}
-          <StyledLink
-            to={{
-              pathname: '/messages',
-              targetUser: userId,
-            }}
-          >
-            Send message
-          </StyledLink>
+          {match.userId === targetUserId.targetUserId ? null : (
+            <StyledLink
+              to={{
+                pathname: '/messages',
+                targetUser: targetUserId,
+              }}
+            >
+              Send message
+            </StyledLink>
+          )}
         </BasicInfoWrapper>
         {userData.about !== '' ? <About>{userData.about}</About> : null}
       </Wrapper>
