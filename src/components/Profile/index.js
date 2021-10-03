@@ -1,6 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
+import devices from '../../global/devices';
 import styled from 'styled-components/macro';
 import AuthenticatedLoader from '../common/AuthenticatedLoader';
 import database from '../../config/firebase.config';
@@ -11,16 +12,46 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-width: 500px;
   margin: 10px;
   color: rgba(0, 0, 0, 0.8);
   gap: 10px;
+
+  @media ${devices.tablet} {
+    margin-top: 50px;
+    max-width: 600px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas: 'picture info' 'about about';
+  }
+`;
+
+const BasicInfoWrapper = styled.div`
+  grid-area: info;
+  display: flex;
+  width: 300px;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+
+  @media ${devices.tablet} {
+    height: 100%;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
 `;
 
 const ProfilePicture = styled.img`
+  grid-area: picture;
   width: 300px;
   height: 300px;
   border-radius: 5px;
   box-shadow: 0px 1px 2px rgb(0, 0, 0, 0.6);
+
+  @media ${devices.tablet} {
+    justify-self: end;
+  }
 `;
 
 const Name = styled.div`
@@ -44,6 +75,7 @@ const Location = styled.div`
 `;
 
 const About = styled.div`
+  grid-area: about;
   width: 100%;
   overflow-wrap: anywhere;
   line-height: 1.4;
@@ -51,6 +83,10 @@ const About = styled.div`
   border-radius: 5px;
   background-color: rgba(0, 0, 0, 0.03);
   box-shadow: 0px 0.5px 2px rgb(0, 0, 0, 0.1);
+
+  @media ${devices.tablet} {
+    align-self: start;
+  }
 `;
 
 const StyledLink = styled(Link)`
@@ -85,18 +121,20 @@ const Profile = (match) => {
     <>
       <Wrapper>
         <ProfilePicture src={userData.picture} />
-        <Name>
-          {userData.firstName} {userData.lastName}
-        </Name>
-        <Location>lcCnWNUqe51w0o3S2MDt</Location>
-        <StyledLink
-          to={{
-            pathname: '/messages',
-            targetUser: userId,
-          }}
-        >
-          Send message
-        </StyledLink>
+        <BasicInfoWrapper>
+          <Name>
+            {userData.firstName} {userData.lastName}
+          </Name>
+          <Location>lcCnWNUqe51w0o3S2MDt</Location>
+          <StyledLink
+            to={{
+              pathname: '/messages',
+              targetUser: userId,
+            }}
+          >
+            Send message
+          </StyledLink>
+        </BasicInfoWrapper>
         <About>
           lxoqtsnzrizelaofdbctvgustlllxymuwwyqblgmmgttgnuaozdgfvynqcovpxyrgbflhclghmiqjgfsscxscisontkwshwetgbgglxabnrcvwuivrchpelwpurkpbgybnwkdfgnpikjplboaoaokrkofrrcretzqkbsfktrsyxqlvjztgyujndmxtedqbpfcdspmkhihpbutxpvuzgfoqxradmbaxmhkzlhygfppruoaprrayzpgsjzlmzpiyyjvcmmllvzbfuesofbuuszbdxhlxhrrhkhklyqcexephrmmiazqaixvouftuphugnrpqpfxsczgppisreqtlzyrdptazkagfnhybmpryilcrblknhrvtlqrugxdywrhchivfaifpmchwcrtpccciddhiyizfybnwspltlxahomkdutohdjqeuxtouhfwodfuvakbpzertnldhvljqtiotaiaxgukwgfbnoajhbhccvrhuhrevgpfuedjgvhwtupaebsksggloehyoonlvajkdhnlpdgwgneemojaemjcnhmcuomxowgyubpvnhjudpvhjvpqdmgybammtrpmuervpxqvzg
         </About>
