@@ -105,7 +105,6 @@ const Profile = (match) => {
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState(null);
   const targetUserId = useParams();
-  console.log(targetUserId, match);
 
   useEffect(() => {
     const getUserData = async () => {
@@ -134,7 +133,7 @@ const Profile = (match) => {
             <StyledLink
               to={{
                 pathname: '/messages',
-                targetUser: targetUserId,
+                targetUser: targetUserId.targetUserId,
               }}
             >
               Send message

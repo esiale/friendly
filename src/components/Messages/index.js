@@ -84,7 +84,7 @@ const Messages = (props) => {
 
     const initiateChat = async () => {
       if (!props.location.targetUser) return;
-      const targetUser = props.location.targetUser.userId;
+      const targetUser = props.location.targetUser;
       const chatroomName = generateChatroomName(targetUser);
       const chatExists = await checkIfChatExists(chatroomName);
       if (chatExists && !chats.length) return;
