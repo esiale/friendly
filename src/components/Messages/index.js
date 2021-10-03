@@ -49,6 +49,9 @@ const Messages = (props) => {
   const toggleListVisible = () => setListVisible((prev) => !prev);
 
   useEffect(() => {
+    console.log(currentChat);
+    if (currentChat !== null) return;
+
     const checkIfChatExists = async (chatroomId) => {
       const chatRef = doc(database, 'messages', chatroomId);
       const docSnap = await getDoc(chatRef);
@@ -88,8 +91,8 @@ const Messages = (props) => {
       const chatroomName = generateChatroomName(targetUser);
       const chatExists = await checkIfChatExists(chatroomName);
       if (chatExists && !chats.length) return;
-      const chatId = findChat(chats, targetUser);
       if (chatExists) {
+        const chatId = findChat(chats, targetUser);
         setCurrentChat(chatId);
       } else {
         setIsCreatingNewChat(true);
@@ -97,7 +100,7 @@ const Messages = (props) => {
       }
     };
     initiateChat();
-  }, [chats, props.location.targetUser, userId]);
+  }, [currentChat, chats, props.location.targetUser, userId]);
 
   useEffect(() => {
     const filterTargetUserId = (chat) => {
