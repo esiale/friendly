@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
 import { getAuth, signOut } from 'firebase/auth';
 import { getDatabase, ref, set, serverTimestamp, off } from 'firebase/database';
+import UserMenu from './UserMenu';
 import database from '../../config/firebase.config';
 import devices from '../../global/devices';
 import styled from 'styled-components/macro';
@@ -64,6 +65,7 @@ const Picture = styled.img`
   height: 90%;
   border-radius: 50%;
   filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.2));
+  cursor: pointer;
 `;
 
 const Icon = styled.img`
@@ -86,6 +88,7 @@ const Name = styled.p`
 
 const Header = (props) => {
   const { userId } = props;
+  const [userMenuIsVisible, setUserMenuIsVisible] = useState(false);
   const [currentUserData, setCurrentUserData] = useState({
     firstName: null,
     picture: null,
@@ -138,9 +141,18 @@ const Header = (props) => {
         </Link>
       </Navigation>
       <UserPanel>
-        <Picture src={currentUserData.picture} onClick={() => signOutUser()} />
+        <Picture
+          src={currentUserData.picture}
+          onClick={() => setUserMenuIsVisible((prev) => !prev)}
+        />
         <Name>{currentUserData.firstName}</Name>
       </UserPanel>
+      <UserMenu
+        userMenuIsVisible={userMenuIsVisible}
+        setUserMenuIsVisible={setUserMenuIsVisible}
+        signOutUser={signOutUser}
+        userId={userId}
+      />
     </Wrapper>
   );
 };

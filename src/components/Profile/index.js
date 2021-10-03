@@ -75,8 +75,8 @@ const Location = styled.div`
 `;
 
 const About = styled.div`
+  align-self: flex-start;
   grid-area: about;
-  width: 100%;
   overflow-wrap: anywhere;
   line-height: 1.4;
   padding: 5px;
@@ -86,6 +86,7 @@ const About = styled.div`
 
   @media ${devices.tablet} {
     align-self: start;
+    width: fit-content;
   }
 `;
 
@@ -125,7 +126,7 @@ const Profile = (match) => {
           <Name>
             {userData.firstName} {userData.lastName}
           </Name>
-          <Location>lcCnWNUqe51w0o3S2MDt</Location>
+          <Location>{userData.location}</Location>
           <StyledLink
             to={{
               pathname: '/messages',
@@ -135,9 +136,7 @@ const Profile = (match) => {
             Send message
           </StyledLink>
         </BasicInfoWrapper>
-        <About>
-          lxoqtsnzrizelaofdbctvgustlllxymuwwyqblgmmgttgnuaozdgfvynqcovpxyrgbflhclghmiqjgfsscxscisontkwshwetgbgglxabnrcvwuivrchpelwpurkpbgybnwkdfgnpikjplboaoaokrkofrrcretzqkbsfktrsyxqlvjztgyujndmxtedqbpfcdspmkhihpbutxpvuzgfoqxradmbaxmhkzlhygfppruoaprrayzpgsjzlmzpiyyjvcmmllvzbfuesofbuuszbdxhlxhrrhkhklyqcexephrmmiazqaixvouftuphugnrpqpfxsczgppisreqtlzyrdptazkagfnhybmpryilcrblknhrvtlqrugxdywrhchivfaifpmchwcrtpccciddhiyizfybnwspltlxahomkdutohdjqeuxtouhfwodfuvakbpzertnldhvljqtiotaiaxgukwgfbnoajhbhccvrhuhrevgpfuedjgvhwtupaebsksggloehyoonlvajkdhnlpdgwgneemojaemjcnhmcuomxowgyubpvnhjudpvhjvpqdmgybammtrpmuervpxqvzg
-        </About>
+        <About>{userData.about}</About>
       </Wrapper>
     </>
   );
