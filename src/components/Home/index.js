@@ -9,6 +9,7 @@ import {
   off,
 } from 'firebase/database';
 import { Link } from 'react-router-dom';
+import reload from '../../images/reload.svg';
 import Spinner from '../common/Spinner';
 import devices from '../../global/devices';
 import uniqid from 'uniqid';
@@ -72,14 +73,63 @@ const Wrapper = styled.div`
   }
 `;
 
+const Button = styled.button`
+  width: 150px;
+  height: 50px;
+  border: 0;
+  border-radius: 20px;
+  background-color: rgba(var(--primary), 1);
+  margin: 15px 0 10px 0;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 1.3rem;
+  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.9);
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+  transition: all 300ms;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    background-color: rgb(245, 174, 61);
+    transform: scale(1.05);
+    outline: 0;
+  }
+`;
+
+const Reload = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    width: 150px;
+    height: 150px;
+    transition: all 500ms;
+    cursor: pointer;
+
+    &:hover {
+      transform: rotate(180deg) translate(10px, 3px);
+    }
+  }
+`;
+
+const LoadMore = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const Home = (props) => {
   const [users, setUsers] = useState(null);
+  const [showUsers, setShowUsers] = useState(8);
   const [isLoading, setIsLoading] = useState(true);
   const { userId } = props;
+
   useEffect(() => {
     const db = getDatabase();
     const usersRef = ref(db, 'users');
-    const q = query(usersRef, limitToFirst(21), orderByChild('online'));
+    const q = query(usersRef, limitToFirst(99), orderByChild('online'));
     const getUsers = async () => {
       try {
         const snapshot = await get(q);
@@ -111,7 +161,12 @@ const Home = (props) => {
     };
     getUsers();
     return () => off(usersRef);
-  }, [userId]);
+  }, [userId, isLoading]);
+
+  const handleShowMore = (e) => {
+    e.currentTarget.blur();
+    setShowUsers((prev) => prev + 10);
+  };
 
   if (isLoading)
     return (
@@ -122,14 +177,23 @@ const Home = (props) => {
 
   return (
     <Wrapper>
-      {users.map((user) => (
+      <Reload
+        onClick={() => {
+          setIsLoading(true);
+        }}
+      >
+        <img src={reload} alt="Reload icon" />
+      </Reload>
+      {users.slice(0, showUsers).map((user) => (
         <StyledLink to={`/profile/${user}`} key={uniqid()}>
           <Card userId={user} />
         </StyledLink>
       ))}
-      {users.map((user) => (
-        <Card userId={user} key={uniqid()} />
-      ))}
+      <LoadMore>
+        {showUsers >= users.length ? null : (
+          <Button onClick={(e) => handleShowMore(e)}>Show more</Button>
+        )}
+      </LoadMore>
     </Wrapper>
   );
 };
