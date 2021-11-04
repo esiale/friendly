@@ -2,7 +2,7 @@
 
 Final JavaScript project for The Odin Project curriculum
 
-This project sums up the JavaScript path before moving onto more advanced HTML/CSS lessons and eventually NodeJS. My project mimics a very social/dating app with 1-on-1 messaging system.
+This project sums up the JavaScript path before moving onto more advanced HTML/CSS lessons and eventually NodeJS. My project mimics a simple social/dating app with 1-on-1 messaging system.
 
 ## Technology used:
 
